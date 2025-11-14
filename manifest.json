@@ -10,77 +10,16 @@
   "orientation": "portrait-primary",
   "icons": [
     {
-      "src": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAYAAABS3GwHAAAACXBIWXMAACE4AAAhOAF2aqscAAABfUlEQVR4nO3QMQEAAADCoPVPbQhfoAAAAOA1v9QAATX68/0AAAAASUVORK5CYII=",
+      "src": "./icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAgAAAAIACAYAAABccqhmAAAACXBIWXMAACE4AAAhOAF2aqscAAACRUlEQVR4nO3QMQEAAADCoPVPbQhfoAAAAOA1v9QAATX68/0AAAAASUVORK5CYII=",
+      "src": "./icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     }
   ]
-}
-
-    }
-  ],
-  "icons": [
-    {
-      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iOTYiIGN5PSI5NiIgcj0iOTYiIGZpbGw9IiMyMTgwOGQiLz48dGV4dCB4PSI5NiIgeT0iMTIwIiBmb250LXNpemU9IjEyOCIgZm9udC13ZWlnaHQ9ImJvbGQiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IiNmY2ZjZjkiPkjDrzwvdGV4dD48L3N2Zz4=",
-      "sizes": "192x192",
-      "type": "image/svg+xml",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgdmlld0JveD0iMCAwIDUxMiA1MTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMjU2IiBjeT0iMjU2IiByPSIyNTYiIGZpbGw9IiMyMTgwOGQiLz48dGV4dCB4PSIyNTYiIHk9IjMyMCIgZm9udC1zaXplPSIzNTAiIGZvbnQtd2VpZ2h0PSJib2xkIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjZmNmY2Y5Ij5IzrM8L3RleHQ+PC9zdmc+",
-      "sizes": "512x512",
-      "type": "image/svg+xml",
-      "purpose": "any maskable"
-    }
-  ],
-  "shortcuts": [
-    {
-      "name": "Présences",
-      "short_name": "Présences",
-      "description": "Accédez directement à l'onglet Présence",
-      "url": "./index.html?tab=presence",
-      "icons": [
-        {
-          "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iOTYiIGhlaWdodD0iOTYiIHZpZXdCb3g9IjAgMCA5NiA5NiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iOTYiIGhlaWdodD0iOTYiIGZpbGw9IiMyMTgwOGQiIHJ4PSIyMCIvPjx0ZXh0IHg9IjQ4IiB5PSI2MCIgZm9udC1zaXplPSI1MCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2ZjZmNmOSI+77ifPC90ZXh0Pjwvc3ZnPg==",
-          "sizes": "96x96",
-          "type": "image/svg+xml"
-        }
-      ]
-    },
-    {
-      "name": "Étudiants",
-      "short_name": "Étudiants",
-      "description": "Accédez à la gestion des étudiants",
-      "url": "./index.html?tab=students",
-      "icons": [
-        {
-          "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iOTYiIGhlaWdodD0iOTYiIHZpZXdCb3g9IjAgMCA5NiA5NiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iOTYiIGhlaWdodD0iOTYiIGZpbGw9IiMyMTgwOGQiIHJ4PSIyMCIvPjx0ZXh0IHg9IjQ4IiB5PSI2MCIgZm9udC1zaXplPSI1MCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2ZjZmNmOSI+77iLPC90ZXh0Pjwvc3ZnPg==",
-          "sizes": "96x96",
-          "type": "image/svg+xml"
-        }
-      ]
-    },
-    {
-      "name": "Scanner",
-      "short_name": "Scanner",
-      "description": "Accédez au scanner de codes-barres",
-      "url": "./index.html?tab=scanner",
-      "icons": [
-        {
-          "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iOTYiIGhlaWdodD0iOTYiIHZpZXdCb3g9IjAgMCA5NiA5NiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iOTYiIGhlaWdodD0iOTYiIGZpbGw9IiMyMTgwOGQiIHJ4PSIyMCIvPjx0ZXh0IHg9IjQ4IiB5PSI2MCIgZm9udC1zaXplPSI1MCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2ZjZmNmOSI+8J+OuzwvdGV4dD48L3N2Zz4=",
-          "sizes": "96x96",
-          "type": "image/svg+xml"
-        }
-      ]
-    }
-  ],
-  "prefer_related_applications": false,
-  "related_applications": []
 }
