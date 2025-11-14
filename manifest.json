@@ -1,26 +1,29 @@
 {
-  "name": "Hodor - Gestion de Présences Étudiantes",
+  "name": "Hodor - Gestion de Présences",
   "short_name": "Hodor",
-  "description": "Application web progressive pour gérer les présences étudiantes multi-années. Fonctionne hors ligne avec sauvegarde automatique et export de données.",
+  "description": "Application de gestion des présences étudiantes multi-années",
   "start_url": "./index.html",
-  "scope": "./",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#fcfcf9",
   "theme_color": "#21808d",
   "orientation": "portrait-primary",
-  "categories": ["education", "productivity"],
-  "screenshots": [
+  "icons": [
     {
-      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTQwIiBoZWlnaHQ9IjcyMCIgdmlld0JveD0iMCAwIDU0MCA3MjAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjU0MCIgaGVpZ2h0PSI3MjAiIGZpbGw9IiNmY2ZjZjkiLz48cmVjdCB4PSIyMCIgeT0iMjAiIHdpZHRoPSI1MDAiIGhlaWdodD0iNjgwIiBmaWxsPSIjZmZmZmZmIiBzdHJva2U9IiMzMzMiIHN0cm9rZS13aWR0aD0iMiIgcng9IjIwIi8+PHRleHQgeD0iMjcwIiB5PSI2MCIgZm9udC1zaXplPSIzMiIgZm9udC13ZWlnaHQ9ImJvbGQiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IiMyMTgwOGQiPkhvZG9yPC90ZXh0Pjwvc3ZnPg==",
-      "sizes": "540x720",
-      "form_factor": "narrow",
-      "type": "image/svg+xml"
+      "src": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAYAAABS3GwHAAAACXBIWXMAACE4AAAhOAF2aqscAAABfUlEQVR4nO3QMQEAAADCoPVPbQhfoAAAAOA1v9QAATX68/0AAAAASUVORK5CYII=",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
     },
     {
-      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTI4MCIgaGVpZ2h0PSI3MjAiIHZpZXdCb3g9IjAgMCAxMjgwIDcyMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTI4MCIgaGVpZ2h0PSI3MjAiIGZpbGw9IiNmY2ZjZjkiLz48cmVjdCB4PSIyMCIgeT0iMjAiIHdpZHRoPSIxMjQwIiBoZWlnaHQ9IjY4MCIgZmlsbD0iI2ZmZmZmZiIgc3Ryb2tlPSIjMzMzIiBzdHJva2Utd2lkdGg9IjIiIHJ4PSIyMCIvPjx0ZXh0IHg9IjY0MCIgeT0iNjAiIGZvbnQtc2l6ZT0iNDgiIGZvbnQtd2VpZ2h0PSJib2xkIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjMjE4MDhkIj5Ib2RvcjwvdGV4dD48L3N2Zz4=",
-      "sizes": "1280x720",
-      "form_factor": "wide",
-      "type": "image/svg+xml"
+      "src": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAgAAAAIACAYAAABccqhmAAAACXBIWXMAACE4AAAhOAF2aqscAAACRUlEQVR4nO3QMQEAAADCoPVPbQhfoAAAAOA1v9QAATX68/0AAAAASUVORK5CYII=",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
+
     }
   ],
   "icons": [
