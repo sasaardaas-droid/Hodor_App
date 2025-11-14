@@ -1,0 +1,25 @@
+{
+  "name": "Gestion de Chèques",
+  "short_name": "Chèques",
+  "description": "Application de gestion de chèques et carnets bancaires",
+  "start_url": "/gestion-cheques/",
+  "scope": "/gestion-cheques/",
+  "display": "standalone",
+  "background_color": "#21808d",
+  "theme_color": "#21808d",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/gestion-cheques/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/gestion-cheques/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
