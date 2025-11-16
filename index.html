@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Application de gestion des présences étudiantes">
+    <meta name="theme-color" content="#21808d">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Hodor">
+
+    <title>Hodor - Gestion de Présences</title>
+
+    <!-- IMPORTANT: Lien vers le manifest.json -->
+    <link rel="manifest" href="./manifest.json">
+    <link rel="icon" type="image/png" href="https://via.placeholder.com/192x192/21808d/fcfcf9?text=H">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #fcfcf9;
+            color: #134252;
+        }
+
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #21808d;
+            text-align: center;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎓 Hodor</h1>
+        <p style="text-align: center; margin-top: 20px;">Application de gestion des présences étudiantes</p>
+        <p style="text-align: center; margin-top: 10px; font-size: 12px; color: #666;">Chargement de l'application...</p>
+    </div>
+
+    <!-- Service Worker Registration -->
+    <script>
+        console.log('🚀 Hodor app initialisation...');
+
+        // Enregistrer le service worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                console.log('📲 Tentative d'enregistrement du Service Worker...');
+
+                navigator.serviceWorker.register('./sw.js')
+                    .then(function(registration) {
+                        console.log('✅ Service Worker enregistré avec succès');
+                        console.log('Scope:', registration.scope);
+                    })
+                    .catch(function(error) {
+                        console.warn('⚠️ Service Worker non disponible:', error);
+                    });
+            });
+        } else {
+            console.warn('⚠️ Service Workers non supportés');
+        }
+    </script>
+</body>
+</html>
