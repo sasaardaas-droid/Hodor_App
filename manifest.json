@@ -1,7 +1,7 @@
 {
   "name": "Hodor - Gestion de Présences Étudiantes",
   "short_name": "Hodor",
-  "description": "Application de gestion des présences étudiantes multi-années",
+  "description": "Application de gestion des présences étudiantes multi-années avec support offline, scanner de codes-barres, gestion d'étudiants et export de données.",
   "start_url": "/hodor_App/index.html",
   "scope": "/hodor_App/",
   "display": "standalone",
