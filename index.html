@@ -3,72 +3,1610 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Application de gestion des présences étudiantes">
     <meta name="theme-color" content="#21808d">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Hodor">
-
-    <title>Hodor - Gestion de Présences</title>
-
-    <!-- IMPORTANT: Lien vers le manifest.json -->
+    <meta name="description" content="Application de gestion des présences étudiantes multi-années">
+    <title>Hodor</title>
+    
+    <!-- PWA Manifest Inline -->
     <link rel="manifest" href="./manifest.json">
-    <link rel="icon" type="image/png" href="https://via.placeholder.com/192x192/21808d/fcfcf9?text=H">
-
+    
+    <!-- Apple Touch Icon -->
+    <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIiB2aWV3Qm94PSIwIDAgMTkyIDE5MiI+PHJlY3QgeD0iNDkiIHk9IjQ0IiB3aWR0aD0iOTQiIGhlaWdodD0iOTQiIHJ4PSI4IiBmaWxsPSIjMjE4MDhkIi8+PHBhdGggZD0iTTk2IDY0TDE0NCA2NEwxNDQgMTI4TDk2IDEyOFoiIGZpbGw9IiNmZmYiLz48dGV4dCB4PSI5NiIgeT0iMTAwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iNzIiIGZpbGw9IiNmZmYiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkgwMGR1cjwvdGV4dD48L3N2Zz4=">
+    
     <style>
+        :root {
+            --color-primary: #21808d;
+            --color-primary-hover: #1d7480;
+            --color-primary-active: #1a6873;
+            --color-secondary: rgba(94, 82, 64, 0.12);
+            --color-secondary-hover: rgba(94, 82, 64, 0.2);
+            --color-background: #fcfcf9;
+            --color-surface: #fffffe;
+            --color-text: #134252;
+            --color-text-secondary: #626c71;
+            --color-border: rgba(94, 82, 64, 0.2);
+            --color-error: #c0152f;
+            --color-success: #21808d;
+            --radius-base: 8px;
+            --radius-lg: 12px;
+            --space-8: 8px;
+            --space-12: 12px;
+            --space-16: 16px;
+            --space-20: 20px;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.04);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --color-background: #1f2121;
+                --color-surface: #262828;
+                --color-text: #f5f5f5;
+                --color-text-secondary: rgba(167, 169, 169, 0.7);
+                --color-primary: #32b8c6;
+                --color-primary-hover: #2da6b2;
+                --color-border: rgba(119, 124, 124, 0.3);
+                --color-secondary: rgba(119, 124, 124, 0.15);
+                --color-secondary-hover: rgba(119, 124, 124, 0.25);
+            }
+        }
+
         * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
         }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #fcfcf9;
-            color: #134252;
+            background: var(--color-background);
+            color: var(--color-text);
+            line-height: 1.5;
+            padding: var(--space-16);
+            max-width: 1200px;
+            margin: 0 auto;
         }
 
-        .container {
-            max-width: 100%;
-            margin: 0 auto;
-            padding: 20px;
+        .header {
+            background: var(--color-surface);
+            padding: var(--space-20);
+            border-radius: var(--radius-lg);
+            margin-bottom: var(--space-20);
+            box-shadow: var(--shadow-sm);
         }
 
         h1 {
-            color: #21808d;
+            font-size: 28px;
+            font-weight: 600;
+            color: var(--color-text);
+            margin-bottom: var(--space-8);
+        }
+
+        .subtitle {
+            color: var(--color-text-secondary);
+            font-size: 14px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: var(--space-8);
+            margin-bottom: var(--space-20);
+            background: var(--color-surface);
+            padding: var(--space-8);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+            overflow-x: auto;
+        }
+
+        .tab {
+            padding: var(--space-12) var(--space-20);
+            border: none;
+            background: transparent;
+            color: var(--color-text-secondary);
+            cursor: pointer;
+            border-radius: var(--radius-base);
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .tab:hover {
+            background: var(--color-secondary);
+            color: var(--color-text);
+        }
+
+        .tab.active {
+            background: var(--color-primary);
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .card {
+            background: var(--color-surface);
+            padding: var(--space-20);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+            margin-bottom: var(--space-16);
+        }
+
+        .controls {
+            display: flex;
+            gap: var(--space-12);
+            margin-bottom: var(--space-16);
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            flex: 1;
+            min-width: 150px;
+        }
+
+        label {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--color-text-secondary);
+        }
+
+        select, input[type="text"], input[type="date"], input[type="file"] {
+            padding: var(--space-8) var(--space-12);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-base);
+            background: var(--color-surface);
+            color: var(--color-text);
+            font-size: 14px;
+            width: 100%;
+        }
+
+        select:focus, input:focus {
+            outline: 2px solid var(--color-primary);
+            border-color: var(--color-primary);
+        }
+
+        .btn {
+            padding: var(--space-8) var(--space-16);
+            border: none;
+            border-radius: var(--radius-base);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: var(--color-primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--color-primary-hover);
+        }
+
+        .btn-secondary {
+            background: var(--color-secondary);
+            color: var(--color-text);
+        }
+
+        .btn-secondary:hover {
+            background: var(--color-secondary-hover);
+        }
+
+
+        .btn-danger {
+            background: var(--color-error);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #a01228;
+        }
+
+
+
+        .btn-small {
+            padding: 4px 12px;
+            font-size: 12px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: var(--space-16);
+        }
+
+        th, td {
+            padding: var(--space-12);
+            text-align: left;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        th {
+            background: var(--color-secondary);
+            font-weight: 600;
+            font-size: 12px;
+            text-transform: uppercase;
+            color: var(--color-text-secondary);
+        }
+
+        tr:hover {
+            background: var(--color-secondary);
+        }
+
+        tr.absent-row {
+            background: rgba(192, 21, 47, 0.08);
+        }
+
+        tr.absent-row:hover {
+            background: rgba(192, 21, 47, 0.12);
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: var(--space-8);
+            cursor: pointer;
+        }
+
+        input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-12);
+            margin-bottom: var(--space-16);
+        }
+
+        .stat-card {
+            background: var(--color-secondary);
+            padding: var(--space-16);
+            border-radius: var(--radius-base);
+            border: 1px solid var(--color-border);
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 600;
+            color: var(--color-primary);
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--color-text-secondary);
+            margin-top: 4px;
+        }
+
+        .empty-state {
             text-align: center;
-            margin: 20px 0;
+            padding: 40px;
+            color: var(--color-text-secondary);
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: var(--space-8);
+            margin-bottom: var(--space-16);
+            flex-wrap: wrap;
+        }
+
+        .install-prompt {
+            background: linear-gradient(135deg, var(--color-primary), var(--color-primary-hover));
+            color: white;
+            padding: var(--space-16);
+            border-radius: var(--radius-lg);
+            margin-bottom: var(--space-20);
+            display: none;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: var(--shadow-md);
+        }
+
+        .install-prompt.show {
+            display: flex;
+        }
+
+        .install-content {
+            flex: 1;
+        }
+
+        .install-title {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .install-text {
+            font-size: 13px;
+            opacity: 0.9;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: var(--space-8);
+            }
+
+            .controls {
+                flex-direction: column;
+            }
+
+            .control-group {
+                width: 100%;
+            }
+
+            table {
+                font-size: 12px;
+            }
+
+            th, td {
+                padding: var(--space-8);
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>🎓 Hodor</h1>
-        <p style="text-align: center; margin-top: 20px;">Application de gestion des présences étudiantes</p>
-        <p style="text-align: center; margin-top: 10px; font-size: 12px; color: #666;">Chargement de l'application...</p>
+    <div id="installPrompt" class="install-prompt">
+        <div class="install-content">
+            <div class="install-title">📱 Installer Hodor</div>
+            <div class="install-text">Ajoutez l'application à votre écran d'accueil pour un accès rapide</div>
+        </div>
+        <button class="btn btn-secondary btn-small" onclick="hideInstallPrompt()">Plus tard</button>
     </div>
 
-    <!-- Service Worker Registration -->
+    <div class="header">
+        <h1>📋 Hodor</h1>
+        <p class="subtitle">Gestion des présences étudiantes - Multi-années</p>
+    </div>
+
+    <div class="tabs">
+        <button class="tab active" onclick="switchTab('presence')">Présence</button>
+        <button class="tab" onclick="switchTab('scanner')">Scanner</button>
+        <button class="tab" onclick="switchTab('students')">Étudiants</button>
+        <button class="tab" onclick="switchTab('backup')">Sauvegarde et Exportation</button>
+    </div>
+
+    <!-- Onglet Scanner -->
+    <div id="scannerTab" class="tab-content">
+        <div class="card">
+            <h2 style="margin-bottom: 16px; font-size: 20px;">📷 Scanner de Code-Barres</h2>
+            
+            <div class="controls">
+                <div class="control-group">
+                    <label>Année</label>
+                    <select id="scanYearSelect">
+                        <option value="1">1ère année</option>
+                        <option value="2">2ème année</option>
+                        <option value="3">3ème année</option>
+                        <option value="4">4ème année</option>
+                        <option value="5">5ème année</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label>Séance</label>
+                    <select id="scanSessionSelect">
+                        <option value="1">Séance 1</option>
+                        <option value="2">Séance 2</option>
+                        <option value="3">3ème</option>
+                        <option value="4">Séance 4</option>
+                        <option value="5">Séance 5</option>
+                        <option value="6">Séance 6</option>
+                        <option value="7">Séance 7</option>
+                        <option value="8">Séance 8</option>
+                        <option value="9">Séance 9</option>
+                        <option value="10">Séance 10</option>
+                        <option value="11">Séance 11</option>
+                        <option value="12">Séance 12</option>
+                        <option value="13">Séance 13</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label>Groupe</label>
+                    <select id="scanGroupFilter">
+                        <option value="">Tous les groupes</option>
+                    </select>
+                </div>
+            </div>
+
+            <div style="margin: 20px 0;">
+                <button id="startScanBtn" class="btn btn-primary" onclick="startScanning()" style="width: 100%;">
+                    📷 Démarrer le Scanner
+                </button>
+                <button id="stopScanBtn" class="btn btn-secondary" onclick="stopScanning()" style="width: 100%; display: none; margin-top: 8px;">
+                    ⏹️ Arrêter le Scanner
+                </button>
+            </div>
+
+            <div id="scanReader" style="width: 100%; max-width: 500px; margin: 0 auto; border-radius: 12px; overflow: hidden;"></div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 20px;">
+                <div class="card" style="padding: 16px;">
+                    <h3 style="font-size: 16px; color: var(--color-success); margin-bottom: 12px;">✓ Présents (<span id="presentCount">0</span>)</h3>
+                    <div id="presentList" style="max-height: 300px; overflow-y: auto; font-size: 14px;"></div>
+                </div>
+                <div class="card" style="padding: 16px;">
+                    <h3 style="font-size: 16px; color: var(--color-error); margin-bottom: 12px;">✗ Absents (<span id="absentCount">0</span>)</h3>
+                    <div id="absentList" style="max-height: 300px; overflow-y: auto; font-size: 14px;"></div>
+                </div>
+            </div>
+
+            <div style="margin-top: 20px;">
+                <button class="btn btn-primary" onclick="finishScanning()" style="width: 100%;">
+                    💾 Terminer et Enregistrer
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Onglet Présence -->
+    <div id="presenceTab" class="tab-content active">
+        <div class="card">
+            <div class="controls">
+                <div class="control-group">
+                    <label>Année</label>
+                    <select id="yearSelect" onchange="loadPresence()">
+                        <option value="1">1ère année</option>
+                        <option value="2">2ème année</option>
+                        <option value="3">3ème année</option>
+                        <option value="4">4ème année</option>
+                        <option value="5">5ème année</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label>Séance</label>
+                    <select id="sessionSelect" onchange="loadPresence()">
+                        <option value="1">Séance 1</option>
+                        <option value="2">Séance 2</option>
+                        <option value="3">Séance 3</option>
+                        <option value="4">Séance 4</option>
+                        <option value="5">Séance 5</option>
+                        <option value="6">Séance 6</option>
+                        <option value="7">Séance 7</option>
+                        <option value="8">Séance 8</option>
+                        <option value="9">Séance 9</option>
+                        <option value="10">Séance 10</option>
+                        <option value="11">Séance 11</option>
+                        <option value="12">Séance 12</option>
+                        <option value="13">Séance 13</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label>Date de la séance</label>
+                    <input type="date" id="sessionDate" onchange="saveSessionDate()">
+                </div>
+                <div class="control-group">
+                    <label>Groupe</label>
+                    <select id="groupFilter" onchange="loadPresence()">
+                        <option value="">Tous les groupes</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label>Spécialité</label>
+                    <select id="specialtyFilter" onchange="loadPresence()">
+                        <option value="">Toutes les spécialités</option>
+                    </select>
+                </div>
+            </div>
+            <!-- Bouton de contrôle d'édition -->
+            <div style="margin-top: 16px;">
+                <button id="toggleEditBtn" class="btn btn-primary" onclick="toggleEditingSession()" style="width: 100%; font-size: 16px; padding: 12px;">
+                    ▶️ Démarrer l'appel
+                </button>
+            </div>
+
+            <!-- Message d'état -->
+            <div id="sessionStatus" style="margin-top: 12px; padding: 10px; background-color: var(--color-background-secondary, #f0f0f0); border-radius: 4px; display: none; text-align: center; font-weight: bold;">
+                ✏️ Mode édition actif - Vous pouvez maintenant modifier les présences
+            </div>
+
+            <div id="presenceTable"></div>
+        </div>
+    </div>
+
+    <!-- Onglet Sauvegarde et Exportation -->
+    <div id="backupTab" class="tab-content">
+        <div class="card">
+            <h2 style="margin-bottom: 16px; font-size: 20px;">💾 Sauvegarde et Exportation</h2>
+            
+            <div style="margin-bottom: 24px;">
+                <h3 style="font-size: 16px; margin-bottom: 12px; color: var(--color-text-secondary);">Sauvegarde complète (JSON)</h3>
+                <p style="font-size: 14px; color: var(--color-text-secondary); margin-bottom: 12px;">
+                    Sauvegardez toutes les données (5 années + dates des séances) dans un fichier JSON.
+                </p>
+                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                    <button class="btn btn-primary" onclick="saveBackup()">💾 Sauvegarder Tout</button>
+                    <button class="btn btn-secondary" onclick="document.getElementById('restoreFile').click()">📥 Restaurer une sauvegarde</button>
+                    <input type="file" id="restoreFile" accept=".json" style="display: none" onchange="restoreBackup(event)">
+                </div>
+            </div>
+
+            <div style="border-top: 1px solid var(--color-border); padding-top: 24px;">
+                <h3 style="font-size: 16px; margin-bottom: 12px; color: var(--color-text-secondary);">Export CSV</h3>
+                <p style="font-size: 14px; color: var(--color-text-secondary); margin-bottom: 12px;">
+                    Exportez les présences d'une année spécifique au format CSV (compatible Excel).
+                </p>
+                <div style="display: flex; gap: 12px; align-items: flex-end; flex-wrap: wrap;">
+                    <div class="control-group" style="flex: 1; min-width: 200px;">
+                        <label>Année à exporter</label>
+                        <select id="exportYearSelect">
+                            <option value="1">1ère année</option>
+                            <option value="2">2ème année</option>
+                            <option value="3">3ème année</option>
+                            <option value="4">4ème année</option>
+                            <option value="5">5ème année</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-secondary" onclick="exportCSVFromBackup()">📤 Export CSV</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Onglet Étudiants -->
+    <div id="studentsTab" class="tab-content">
+        <div class="card">
+            <div class="controls">
+                <div class="control-group">
+                    <label>Année</label>
+                    <select id="yearSelectStudents" onchange="loadStudents()">
+                        <option value="1">1ère année</option>
+                        <option value="2">2ème année</option>
+                        <option value="3">3ème année</option>
+                        <option value="4">4ème année</option>
+                        <option value="5">5ème année</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label>Groupe</label>
+                    <select id="groupFilterStudents" onchange="loadStudents()">
+                        <option value="">Tous les groupes</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label>Importer CSV</label>
+                    <input type="file" id="csvFile" accept=".csv" onchange="importCSV(event)">
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap;">
+                <button class="btn btn-primary" onclick="showAddStudentForm()">➕ Ajouter un étudiant</button>
+                <button class="btn btn-secondary" onclick="deleteAllStudents()">🗑️ Supprimer toute la liste</button>
+            </div>
+
+            <div id="addStudentForm" style="display: none; background: var(--color-secondary); padding: 16px; border-radius: var(--radius-base); margin-bottom: 16px;">
+                <h3 style="margin-bottom: 12px; font-size: 16px;">Ajouter un étudiant</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 12px;">
+                    <div class="control-group">
+                        <label>Matricule *</label>
+                        <input type="text" id="newMatricule" required>
+                    </div>
+                    <div class="control-group">
+                        <label>Matricule Progres</label>
+                        <input type="text" id="newMatriculeProgres">
+                    </div>
+                    <div class="control-group">
+                        <label>Nom *</label>
+                        <input type="text" id="newNom" required>
+                    </div>
+                    <div class="control-group">
+                        <label>Prénom *</label>
+                        <input type="text" id="newPrenom" required>
+                    </div>
+                    <div class="control-group">
+                        <label>Section</label>
+                        <input type="text" id="newSection">
+                    </div>
+                    <div class="control-group">
+                        <label>Groupe *</label>
+                        <input type="text" id="newGroupe" required>
+                    </div>
+                    <div class="control-group">
+                        <label>Spécialité</label>
+                        <input type="text" id="newSpecialite">
+                    </div>
+                </div>
+                <div style="display: flex; gap: 8px;">
+                    <button class="btn btn-primary" onclick="addStudent()">✓ Ajouter</button>
+                    <button class="btn btn-secondary" onclick="hideAddStudentForm()">✗ Annuler</button>
+                </div>
+            </div>
+
+            <div class="filter-buttons">
+                <button class="btn btn-secondary btn-small" onclick="filterStudents('all')">Tous</button>
+                <button class="btn btn-secondary btn-small" onclick="filterStudents('zero')">Sans absence</button>
+                <button class="btn btn-secondary btn-small" onclick="filterStudents('less5')">Moins de 5 absences</button>
+                <button class="btn btn-secondary btn-small" onclick="filterStudents('more5')">5 absences et plus</button>
+            </div>
+
+            <div id="stats" class="stats"></div>
+            <div id="studentsTable"></div>
+        </div>
+    </div>
+
+    <!-- html5-qrcode Library -->
+    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+
     <script>
-        console.log('🚀 Hodor app initialisation...');
-
-        // Enregistrer le service worker
+        // Service Worker Registration
         if ('serviceWorker' in navigator) {
-            window.addEventListener('load', function() {
-                console.log('📲 Tentative d'enregistrement du Service Worker...');
+            const swCode = `
+                self.addEventListener('install', (event) => {
+                    console.log('Service Worker installé');
+                    self.skipWaiting();
+                });
 
-                navigator.serviceWorker.register('./sw.js')
-                    .then(function(registration) {
-                        console.log('✅ Service Worker enregistré avec succès');
-                        console.log('Scope:', registration.scope);
-                    })
-                    .catch(function(error) {
-                        console.warn('⚠️ Service Worker non disponible:', error);
-                    });
-            });
-        } else {
-            console.warn('⚠️ Service Workers non supportés');
+                self.addEventListener('activate', (event) => {
+                    console.log('Service Worker activé');
+                    event.waitUntil(clients.claim());
+                });
+
+                self.addEventListener('fetch', (event) => {
+                    event.respondWith(
+                        caches.match(event.request).then((response) => {
+                            return response || fetch(event.request);
+                        })
+                    );
+                });
+            `;
+            
+            const blob = new Blob([swCode], { type: 'application/javascript' });
+            const swUrl = URL.createObjectURL(blob);
+            
+            navigator.serviceWorker.register(swUrl)
+                .then(() => console.log('✅ Service Worker enregistré'))
+                .catch(err => console.error('❌ Erreur Service Worker:', err));
         }
+
+        // PWA Install Prompt
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            document.getElementById('installPrompt').classList.add('show');
+        });
+
+        function hideInstallPrompt() {
+            document.getElementById('installPrompt').classList.remove('show');
+        }
+
+        // Data structure
+        let students = {
+            '1': [], '2': [], '3': [], '4': [], '5': []
+        };
+        let sessionDates = {
+            '1': {}, '2': {}, '3': {}, '4': {}, '5': {}
+        };
+        let currentFilter = 'all';
+
+        // Auto-save every 30 seconds
+        setInterval(() => {
+            saveData();
+        }, 30000);
+
+        // Automatic backup management
+        function createAutoBackup() {
+            const backup = {
+                students: students,
+                dates: sessionDates,
+                version: '1.0',
+                timestamp: new Date().toISOString()
+            };
+            
+            // Get existing backups
+            let backups = JSON.parse(localStorage.getItem('hodor_auto_backups') || '[]');
+            
+            // Add new backup
+            backups.push(backup);
+            
+            // Keep only last 5 backups
+            if (backups.length > 5) {
+                backups = backups.slice(-5);
+            }
+            
+            // Save backups
+            localStorage.setItem('hodor_auto_backups', JSON.stringify(backups));
+            console.log('✅ Backup automatique créé (' + backups.length + '/5)');
+        }
+
+        // Load data from localStorage
+        function loadData() {
+            // First try to load from regular storage
+            const savedStudents = localStorage.getItem('hodor_students');
+            const savedDates = localStorage.getItem('hodor_dates');
+            
+            if (savedStudents) {
+                students = JSON.parse(savedStudents);
+                console.log('✅ Données étudiants chargées');
+            }
+            
+            if (savedDates) {
+                sessionDates = JSON.parse(savedDates);
+                console.log('✅ Dates des séances chargées');
+            }
+            
+            // If no data, try loading from latest backup
+            if (!savedStudents) {
+                const backups = JSON.parse(localStorage.getItem('hodor_auto_backups') || '[]');
+                
+                if (backups.length > 0) {
+                    const latest = backups[backups.length - 1];
+                    students = latest.students || { '1': [], '2': [], '3': [], '4': [], '5': [] };
+                    sessionDates = latest.dates || { '1': {}, '2': {}, '3': {}, '4': {}, '5': {} };
+                    console.log('✅ Dernière sauvegarde backup chargée');
+                    // Save to regular storage
+                    saveData();
+                }
+            }
+        }
+
+        // Create backup on page load
+        window.addEventListener('load', () => {
+            loadData();
+            createAutoBackup();
+            loadPresence();
+        });
+
+        // Create backup on page unload
+        window.addEventListener('beforeunload', () => {
+            saveData();
+            createAutoBackup();
+        });
+
+        // Tab switching
+        function switchTab(tab) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            
+            if (tab === 'presence') {
+                document.querySelector('.tab:nth-child(1)').classList.add('active');
+                document.getElementById('presenceTab').classList.add('active');
+                loadPresence();
+            } else if (tab === 'scanner') {
+                document.querySelector('.tab:nth-child(2)').classList.add('active');
+                document.getElementById('scannerTab').classList.add('active');
+                initScanner();
+            } else if (tab === 'students') {
+                document.querySelector('.tab:nth-child(3)').classList.add('active');
+                document.getElementById('studentsTab').classList.add('active');
+                loadStudents();
+            } else if (tab === 'backup') {
+                document.querySelector('.tab:nth-child(4)').classList.add('active');
+                document.getElementById('backupTab').classList.add('active');
+            }
+        }
+
+        // Scanner functionality
+        let html5QrcodeScanner = null;
+        let scannedStudents = new Set();
+        let currentScanYear = null;
+        let currentScanSession = null;
+        let currentScanGroup = null;
+
+        function initScanner() {
+            // Update group filter
+            const year = document.getElementById('scanYearSelect').value;
+            const studentList = students[year] || [];
+            const groups = [...new Set(studentList.map(s => s.groupe))].filter(Boolean).sort((a, b) => a - b);
+            const groupSelect = document.getElementById('scanGroupFilter');
+            groupSelect.innerHTML = '<option value="">Tous les groupes</option>';
+            groups.forEach(g => {
+                groupSelect.innerHTML += `<option value="${g}">${g}</option>`;
+            });
+            
+            // Reset scanned students
+            scannedStudents.clear();
+            updateScanLists();
+        }
+
+        function startScanning() {
+            currentScanYear = document.getElementById('scanYearSelect').value;
+            currentScanSession = document.getElementById('scanSessionSelect').value;
+            currentScanGroup = document.getElementById('scanGroupFilter').value;
+            
+            const studentList = students[currentScanYear] || [];
+            if (studentList.length === 0) {
+                alert('Aucun étudiant trouvé pour cette année');
+                return;
+            }
+            
+            // Reset scanned students
+            scannedStudents.clear();
+            updateScanLists();
+            
+            // Show/hide buttons
+            document.getElementById('startScanBtn').style.display = 'none';
+            document.getElementById('stopScanBtn').style.display = 'block';
+            
+            // Initialize scanner
+            html5QrcodeScanner = new Html5QrcodeScanner(
+                "scanReader",
+                { 
+                    fps: 10,
+                    qrbox: { width: 250, height: 250 },
+                    supportedScanTypes: [Html5QrcodeScanType.SCAN_TYPE_CAMERA]
+                },
+                false
+            );
+            
+            html5QrcodeScanner.render(onScanSuccess, onScanError);
+        }
+
+        function stopScanning() {
+            if (html5QrcodeScanner) {
+                html5QrcodeScanner.clear();
+                html5QrcodeScanner = null;
+            }
+            
+            document.getElementById('startScanBtn').style.display = 'block';
+            document.getElementById('stopScanBtn').style.display = 'none';
+        }
+
+        function onScanSuccess(decodedText, decodedResult) {
+            // Find student by Matricule Progres
+            const studentList = students[currentScanYear] || [];
+            let filtered = studentList;
+            if (currentScanGroup) {
+                filtered = filtered.filter(s => s.groupe == currentScanGroup);
+            }
+            
+            const student = filtered.find(s => s.matricule_progres === decodedText);
+            
+            if (student && !scannedStudents.has(student.matricule)) {
+                scannedStudents.add(student.matricule);
+                updateScanLists();
+                
+                // Vibration feedback
+                if (navigator.vibrate) {
+                    navigator.vibrate(100);
+                }
+                
+                // Audio feedback
+                const audio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIGGa57OaiTgwOUKzn77RgGgU7k9bxy3kqBCR2xvDekEALEl+z6OyrVhMHRp/g8r5tIQUsgc7y2Ik2CBhmuezmoU4MDlCs5++0YRoFO5LW8cx4KwUjdsbw3I9AC0=');
+                audio.play().catch(() => {});
+            }
+        }
+
+        function onScanError(error) {
+            // Silent errors
+        }
+
+        function updateScanLists() {
+            const year = currentScanYear || document.getElementById('scanYearSelect').value;
+            const group = currentScanGroup || document.getElementById('scanGroupFilter').value;
+            
+            let studentList = students[year] || [];
+            if (group) {
+                studentList = studentList.filter(s => s.groupe == group);
+            }
+            
+            const present = studentList.filter(s => scannedStudents.has(s.matricule));
+            const absent = studentList.filter(s => !scannedStudents.has(s.matricule));
+            
+            document.getElementById('presentCount').textContent = present.length;
+            document.getElementById('absentCount').textContent = absent.length;
+            
+            let presentHtml = '';
+            present.forEach(s => {
+                presentHtml += `<div style="padding: 8px; border-bottom: 1px solid var(--color-border);">
+                    ${s.nom} ${s.prenom} - Groupe ${s.groupe}
+                </div>`;
+            });
+            document.getElementById('presentList').innerHTML = presentHtml || '<div style="color: var(--color-text-secondary); padding: 8px;">Aucun</div>';
+            
+            let absentHtml = '';
+            absent.forEach(s => {
+                absentHtml += `<div style="padding: 8px; border-bottom: 1px solid var(--color-border);">
+                    ${s.nom} ${s.prenom} - Groupe ${s.groupe}
+                </div>`;
+            });
+            document.getElementById('absentList').innerHTML = absentHtml || '<div style="color: var(--color-text-secondary); padding: 8px;">Aucun</div>';
+        }
+
+        function finishScanning() {
+            if (!currentScanYear || !currentScanSession) {
+                alert('Veuillez démarrer le scanner d\'abord');
+                return;
+            }
+            
+            if (scannedStudents.size === 0) {
+                if (!confirm('Aucun étudiant n\'a été scanné. Voulez-vous quand même enregistrer (tous absents) ?')) {
+                    return;
+                }
+            }
+            
+            // Update attendance
+            let studentList = students[currentScanYear] || [];
+            if (currentScanGroup) {
+                studentList = studentList.filter(s => s.groupe == currentScanGroup);
+            }
+            
+            const sessionKey = `seance${currentScanSession}`;
+            
+            studentList.forEach(student => {
+                const isPresent = scannedStudents.has(student.matricule);
+                student[sessionKey] = isPresent ? 0 : 1; // 0 = present, 1 = absent
+                
+                // Recalculate total absences
+                let total = 0;
+                for (let i = 1; i <= 13; i++) {
+                    total += parseInt(student[`seance${i}`] || 0);
+                }
+                student.nb_abs = total;
+            });
+            
+            saveData();
+            createAutoBackup();
+            
+            // Stop scanner
+            stopScanning();
+            
+            // Reset
+            scannedStudents.clear();
+            updateScanLists();
+            
+            alert(`Présences enregistrées pour la séance ${currentScanSession} !\n\nPrésents: ${scannedStudents.size}\nAbsents: ${studentList.length - scannedStudents.size}`);
+        }
+
+        // Load presence
+        function loadPresence() {
+            const year = document.getElementById('yearSelect').value;
+            const session = document.getElementById('sessionSelect').value;
+            const groupFilter = document.getElementById('groupFilter').value;
+            const specialtyFilter = document.getElementById('specialtyFilter').value;
+            
+            // Update filters
+            updateFilters(year);
+            
+            // Load date
+            const dateKey = `session${session}`;
+            const savedDate = sessionDates[year][dateKey] || '';
+            document.getElementById('sessionDate').value = savedDate;
+            
+            // Filter students
+            let filtered = students[year] || [];
+            if (groupFilter) {
+                filtered = filtered.filter(s => s.groupe == groupFilter);
+            }
+            if (specialtyFilter) {
+                filtered = filtered.filter(s => s.specialite === specialtyFilter);
+            }
+            
+            if (filtered.length === 0) {
+                document.getElementById('presenceTable').innerHTML = '<div class="empty-state">Aucun étudiant trouvé. Importez un fichier CSV dans l\'onglet Étudiants.</div>';
+                return;
+            }
+            
+            let html = '<table><thead><tr><th>Nom</th><th>Prénom</th><th>Groupe</th><th>Absent</th></tr></thead><tbody>';
+            
+            filtered.forEach((student, idx) => {
+                const sessionKey = `seance${session}`;
+                const isAbsent = student[sessionKey] == 1;
+                
+                html += `<tr class="${isAbsent ? 'absent-row' : ''}">
+                    <td class="long-press-cell" 
+                        ontouchstart="startLongPress('${year}', '${student.matricule}', ${session}, event)"
+                        ontouchend="cancelLongPress()"
+                        ontouchmove="cancelLongPress()"
+                        onmousedown="safeLongPress('${year}', '${student.matricule}', ${session}, event)"
+                        onmouseup="cancelLongPress()"
+                        onmouseleave="cancelLongPress()"
+                        style="cursor: pointer; user-select: none;">
+                        ${student.nom}
+                    </td>
+                    <td class="long-press-cell" 
+                        ontouchstart="startLongPress('${year}', '${student.matricule}', ${session}, event)"
+                        ontouchend="cancelLongPress()"
+                        ontouchmove="cancelLongPress()"
+                        onmousedown="safeLongPress('${year}', '${student.matricule}', ${session}, event)"
+                        onmouseup="cancelLongPress()"
+                        onmouseleave="cancelLongPress()"
+                        style="cursor: pointer; user-select: none;">
+                        ${student.prenom}
+                    </td>
+                    <td>${student.groupe}</td>
+                    <td>
+                        <label class="checkbox-label">
+                            <input type="checkbox" ${isAbsent ? 'checked' : ''} 
+                                id="checkbox-${student.matricule}"
+                                onchange="toggleAbsence('${year}', '${student.matricule}', ${session}, this.checked); updateCheckboxLabel(this)">
+                            <span class="checkbox-text">${isAbsent ? 'Oui' : 'Non'}</span>
+                        </label>
+                    </td>
+                </tr>`;
+            });
+            
+            html += '</tbody></table>';
+            document.getElementById('presenceTable').innerHTML = html;
+        }
+
+        // Update checkbox label
+        function updateCheckboxLabel(checkbox) {
+            const span = checkbox.nextElementSibling;
+            if (span) {
+                span.textContent = checkbox.checked ? 'Oui' : 'Non';
+            }
+        }
+
+        // Toggle absence
+        function toggleAbsence(year, matricule, session, isAbsent) {
+            const student = students[year].find(s => s.matricule === matricule);
+            if (student) {
+                const sessionKey = `seance${session}`;
+                student[sessionKey] = isAbsent ? 1 : 0;
+                
+                // Recalculate total absences
+                let total = 0;
+                for (let i = 1; i <= 13; i++) {
+                    total += parseInt(student[`seance${i}`] || 0);
+                }
+                student.nb_abs = total;
+                
+                saveData();
+                createAutoBackup(); // Backup après chaque modification de présence
+                
+                // Update row background color
+                const checkbox = document.getElementById(`checkbox-${matricule}`);
+                if (checkbox) {
+                    const row = checkbox.closest('tr');
+                    if (row) {
+                        if (isAbsent) {
+                            row.classList.add('absent-row');
+                        } else {
+                            row.classList.remove('absent-row');
+                        }
+                    }
+                }
+            }
+        }
+
+        // Save session date
+        function saveSessionDate() {
+            const year = document.getElementById('yearSelect').value;
+            const session = document.getElementById('sessionSelect').value;
+            const date = document.getElementById('sessionDate').value;
+            
+            const dateKey = `session${session}`;
+            sessionDates[year][dateKey] = date;
+            saveData();
+        }
+
+        // Update filters
+        function updateFilters(year) {
+            const studentList = students[year] || [];
+            
+            // Group filter
+            const groups = [...new Set(studentList.map(s => s.groupe))].filter(Boolean).sort((a, b) => a - b);
+            const groupSelect = document.getElementById('groupFilter');
+            const currentGroup = groupSelect.value;
+            groupSelect.innerHTML = '<option value="">Tous les groupes</option>';
+            groups.forEach(g => {
+                groupSelect.innerHTML += `<option value="${g}">${g}</option>`;
+            });
+            groupSelect.value = currentGroup;
+            
+            // Specialty filter
+            const specialties = [...new Set(studentList.map(s => s.specialite))].filter(Boolean).sort();
+            const specialtySelect = document.getElementById('specialtyFilter');
+            const currentSpecialty = specialtySelect.value;
+            specialtySelect.innerHTML = '<option value="">Toutes les spécialités</option>';
+            specialties.forEach(s => {
+                specialtySelect.innerHTML += `<option value="${s}">${s}</option>`;
+            });
+            specialtySelect.value = currentSpecialty;
+        }
+
+        // Load students
+        function loadStudents() {
+            const year = document.getElementById('yearSelectStudents').value;
+            const studentList = students[year] || [];
+            
+            // Filter students
+            let filtered = studentList;
+            if (currentFilter === 'zero') {
+                filtered = studentList.filter(s => (s.nb_abs || 0) === 0);
+            } else if (currentFilter === 'less5') {
+                filtered = studentList.filter(s => (s.nb_abs || 0) > 0 && (s.nb_abs || 0) < 5);
+            } else if (currentFilter === 'more5') {
+                filtered = studentList.filter(s => (s.nb_abs || 0) >= 5);
+            }
+            
+            // Stats
+            const total = studentList.length;
+            const noAbsence = studentList.filter(s => (s.nb_abs || 0) === 0).length;
+            const less5 = studentList.filter(s => (s.nb_abs || 0) > 0 && (s.nb_abs || 0) < 5).length;
+            const more5 = studentList.filter(s => (s.nb_abs || 0) >= 5).length;
+            
+            document.getElementById('stats').innerHTML = `
+                <div class="stat-card">
+                    <div class="stat-value">${total}</div>
+                    <div class="stat-label">Total étudiants</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">${noAbsence}</div>
+                    <div class="stat-label">Sans absence</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">${less5}</div>
+                    <div class="stat-label">Moins de 5 absences</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">${more5}</div>
+                    <div class="stat-label">5 absences et plus</div>
+                </div>
+            `;
+            
+            if (filtered.length === 0) {
+                document.getElementById('studentsTable').innerHTML = '<div class="empty-state">Aucun étudiant trouvé.</div>';
+                return;
+            }
+            
+            let html = '<table><thead><tr><th>Matricule</th><th>Matricule Progres</th><th>Nom</th><th>Prénom</th><th>Section</th><th>Groupe</th><th>Spécialité</th><th>NB d\'Abs</th><th>Observations</th><th>Actions</th></tr></thead><tbody>';
+            
+            filtered.forEach(student => {
+                html += `<tr>
+                    <td>${student.matricule}</td>
+                    <td>${student.matricule_progres || ''}</td>
+                    <td>${student.nom}</td>
+                    <td>${student.prenom}</td>
+                    <td>${student.section || ''}</td>
+                    <td>${student.groupe}</td>
+                    <td>${student.specialite || ''}</td>
+                    <td>${student.nb_abs || 0}</td>
+                    <td>
+                        <input type="text" 
+                            id="obs-${student.matricule}"
+                            value="${localStorage.getItem('obs_' + student.matricule) || ''}"
+                            placeholder="..."
+                            onchange="saveObservation('${student.matricule}', this.value)"
+                            style="width: 100%; padding: 4px; border: 1px solid #ddd; border-radius: 4px; font-size: 12px;">
+                    </td>
+                    <td>
+                        <button class="btn btn-secondary btn-small" onclick="deleteStudent('${year}', '${student.matricule}')">Supprimer</button>
+                    </td>
+                </tr>`;
+            });
+            
+            html += '</tbody></table>';
+            document.getElementById('studentsTable').innerHTML = html;
+        }
+
+        // Filter students
+        function filterStudents(filter) {
+            currentFilter = filter;
+            loadStudents();
+        }
+
+        // Show add student form
+        function showAddStudentForm() {
+            document.getElementById('addStudentForm').style.display = 'block';
+            document.getElementById('newMatricule').focus();
+        }
+
+        // Hide add student form
+        function hideAddStudentForm() {
+            document.getElementById('addStudentForm').style.display = 'none';
+            // Clear form
+            document.getElementById('newMatricule').value = '';
+            document.getElementById('newMatriculeProgres').value = '';
+            document.getElementById('newNom').value = '';
+            document.getElementById('newPrenom').value = '';
+            document.getElementById('newSection').value = '';
+            document.getElementById('newGroupe').value = '';
+            document.getElementById('newSpecialite').value = '';
+        }
+
+        // Add student manually
+        function addStudent() {
+            const matricule = document.getElementById('newMatricule').value.trim();
+            const nom = document.getElementById('newNom').value.trim();
+            const prenom = document.getElementById('newPrenom').value.trim();
+            const groupe = document.getElementById('newGroupe').value.trim();
+            
+            if (!matricule || !nom || !prenom || !groupe) {
+                alert('Veuillez remplir tous les champs obligatoires (*)');
+                return;
+            }
+            
+            const year = document.getElementById('yearSelectStudents').value;
+            
+            // Check if matricule exists
+            const exists = students[year].some(s => s.matricule === matricule);
+            if (exists) {
+                alert('Un étudiant avec ce matricule existe déjà');
+                return;
+            }
+            
+            const student = {
+                matricule: matricule,
+                matricule_progres: document.getElementById('newMatriculeProgres').value.trim(),
+                nom: nom,
+                prenom: prenom,
+                section: document.getElementById('newSection').value.trim(),
+                groupe: groupe,
+                specialite: document.getElementById('newSpecialite').value.trim()
+            };
+            
+            // Initialize all sessions to 0
+            for (let i = 1; i <= 13; i++) {
+                student[`seance${i}`] = 0;
+            }
+            student.nb_abs = 0;
+            
+            students[year].push(student);
+            saveData();
+            hideAddStudentForm();
+            loadStudents();
+            alert('Étudiant ajouté avec succès');
+        }
+
+        // Delete all students with confirmation and backup
+        function deleteAllStudents() {
+            const year = document.getElementById('yearSelectStudents').value;
+            const studentList = students[year] || [];
+            
+            if (studentList.length === 0) {
+                alert('Aucun étudiant à supprimer');
+                return;
+            }
+            
+            if (!confirm(`⚠️ Attention !\n\nVous allez supprimer TOUS les ${studentList.length} étudiants de l'année ${year}.\n\nUne sauvegarde automatique sera créée avant la suppression.\n\nConfirmer la suppression ?`)) {
+                return;
+            }
+            
+            // Create automatic backup before deletion
+            const backup = {
+                students: students,
+                dates: sessionDates,
+                version: '1.0',
+                timestamp: new Date().toISOString(),
+                note: `Sauvegarde automatique avant suppression année ${year}`
+            };
+            
+            const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `hodor_backup_before_delete_annee${year}_${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+            
+            // Wait a bit for download to start, then delete
+            setTimeout(() => {
+                students[year] = [];
+                sessionDates[year] = {};
+                saveData();
+                loadStudents();
+                alert('Liste supprimée. La sauvegarde a été téléchargée.');
+            }, 500);
+        }
+
+        // Delete student
+        function deleteStudent(year, matricule) {
+            if (confirm('Supprimer cet étudiant ?')) {
+                students[year] = students[year].filter(s => s.matricule !== matricule);
+                saveData();
+                loadStudents();
+            }
+        }
+
+        // Import CSV
+        function importCSV(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const text = e.target.result;
+                const lines = text.split('\n').filter(l => l.trim());
+                
+                if (lines.length < 2) {
+                    alert('Fichier CSV vide');
+                    return;
+                }
+                
+                const year = document.getElementById('yearSelectStudents').value;
+                const headers = lines[0].split(';').map(h => h.trim());
+                
+                students[year] = [];
+                
+                for (let i = 1; i < lines.length; i++) {
+                    const values = lines[i].split(';').map(v => v.trim());
+                    const student = {
+                        matricule: values[0] || '',
+                        matricule_progres: values[1] || '',
+                        nom: values[2] || '',
+                        prenom: values[3] || '',
+                        section: values[4] || '',
+                        groupe: values[5] || '',
+                        specialite: values[6] || ''
+                    };
+                    
+                    // Sessions 1-13
+                    for (let j = 1; j <= 13; j++) {
+                        student[`seance${j}`] = values[6 + j] || 0;
+                    }
+                    
+                    // Calculate absences
+                    let total = 0;
+                    for (let j = 1; j <= 13; j++) {
+                        total += parseInt(student[`seance${j}`] || 0);
+                    }
+                    student.nb_abs = total;
+                    
+                    students[year].push(student);
+                }
+                
+                saveData();
+                loadStudents();
+                alert(`${students[year].length} étudiants importés pour l'année ${year}`);
+            };
+            
+            reader.readAsText(file);
+            event.target.value = '';
+        }
+
+        // Export CSV from backup tab
+        function exportCSVFromBackup() {
+            const year = document.getElementById('exportYearSelect').value;
+            exportCSVForYear(year);
+        }
+
+        // Export CSV
+        function exportCSV() {
+            const year = document.getElementById('yearSelect').value;
+            exportCSVForYear(year);
+        }
+
+        // Export CSV for specific year
+        function exportCSVForYear(year) {
+            const studentList = students[year] || [];
+            
+            if (studentList.length === 0) {
+                alert('Aucun étudiant à exporter');
+                return;
+            }
+            
+            let csv = 'MATRICULE;MATRICULE PROGRES;NOM;PRENOM;SECTION;GROUPE;SPECIALITE';
+            
+            // Add session headers with dates
+            for (let i = 1; i <= 13; i++) {
+                const dateKey = `session${i}`;
+                const date = sessionDates[year][dateKey];
+                csv += `;Séance ${i}${date ? ' (' + date + ')' : ''}`;
+            }
+            csv += ';NB d\'Abs\n';
+            
+            studentList.forEach(student => {
+                csv += `${student.matricule};${student.matricule_progres || ''};${student.nom};${student.prenom};${student.section || ''};${student.groupe};${student.specialite || ''}`;
+                for (let i = 1; i <= 13; i++) {
+                    csv += `;${student[`seance${i}`] || 0}`;
+                }
+                csv += `;${student.nb_abs || 0}\n`;
+            });
+            
+            const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `hodor_annee${year}_${new Date().toISOString().split('T')[0]}.csv`;
+            link.click();
+            
+            alert(`Export CSV réussi pour l'année ${year}`);
+        }
+
+        // Save backup
+        function saveBackup() {
+            const backup = {
+                students: students,
+                dates: sessionDates,
+                version: '1.0',
+                timestamp: new Date().toISOString()
+            };
+            
+            const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `hodor_backup_${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+        }
+
+        // Restore backup
+        function restoreBackup(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const backup = JSON.parse(e.target.result);
+                    students = backup.students || { '1': [], '2': [], '3': [], '4': [], '5': [] };
+                    sessionDates = backup.dates || { '1': {}, '2': {}, '3': {}, '4': {}, '5': {} };
+                    saveData();
+                    loadPresence();
+                    loadStudents();
+                    alert('Sauvegarde restaurée avec succès');
+                } catch (err) {
+                    alert('Erreur lors de la restauration: ' + err.message);
+                }
+            };
+            reader.readAsText(file);
+            event.target.value = '';
+        }
+
+    
+    // Initialiser au démarrage
+    window.addEventListener('DOMContentLoaded', function() {
+        console.log('🚀 Application chargée');
+        loadData();
+        createAutoBackup();
+
+        // Initialize table
+        setTimeout(() => {
+            const table = document.getElementById('presenceTable');
+            if (table && !editingSessionActive) {
+                table.style.opacity = '0.6';
+                table.style.pointerEvents = 'none';
+            }
+        }, 1000);
+    });
+
+    
+    // Save data
+        function saveData() {
+            localStorage.setItem('hodor_students', JSON.stringify(students));
+            localStorage.setItem('hodor_dates', JSON.stringify(sessionDates));
+        }
+
+    
+    // Variable pour le mode édition
+    let editingSessionActive = false;
+
+    // Wrapper functions for safe editing
+    function safeToggleAbsence(year, matricule, session, isAbsent) {
+        if (!editingSessionActive) return false;
+        return toggleAbsence(year, matricule, session, isAbsent);
+    }
+
+    function safeLongPress(year, matricule, session, event) {
+        if (!editingSessionActive) {
+            alert('❌ Veuillez d\'abord démarrer une session d\'appel');
+            return false;
+        }
+        return startLongPress(year, matricule, session, event);
+    }
+
+    // Toggle editing session
+    function toggleEditingSession() {
+        const table = document.getElementById('presenceTable');
+        if (!editingSessionActive) {
+            editingSessionActive = true;
+            const btn = document.getElementById('toggleEditBtn');
+            btn.innerHTML = '⏹️ Arrêter et Sauvegarder';
+            btn.classList.remove('btn-primary');
+            btn.classList.add('btn-danger');
+            document.getElementById('sessionStatus').style.display = 'block';
+            if (table) {
+                table.style.opacity = '1';
+                table.style.pointerEvents = 'auto';
+            }
+            console.log('✏️ Session d\'édition démarrée');
+        } else {
+            const btn = document.getElementById('toggleEditBtn');
+            btn.innerHTML = '⏳ Sauvegarde en cours...';
+            btn.disabled = true;
+            saveData();
+            createAutoBackup();
+            setTimeout(() => {
+                editingSessionActive = false;
+                btn.innerHTML = '▶️ Démarrer l\'appel';
+                btn.classList.remove('btn-danger');
+                btn.classList.add('btn-primary');
+                btn.disabled = false;
+                document.getElementById('sessionStatus').style.display = 'none';
+                if (table) {
+                    table.style.opacity = '0.6';
+                    table.style.pointerEvents = 'none';
+                }
+                alert('✅ Les présences ont été sauvegardées !');
+            }, 800);
+        }
+    }
+
+    // Update group filter dropdown
+    function updateGroupFilterStudents() {
+        const year = document.getElementById('yearSelectStudents').value;
+        const studentList = students[year];
+        const groupSelect = document.getElementById('groupFilterStudents');
+        const currentGroup = groupSelect.value;
+
+        // Get unique groups
+        const groups = [...new Set(studentList.map(s => s.groupe).filter(Boolean))].sort((a, b) => {
+            const aNum = parseInt(a);
+            const bNum = parseInt(b);
+            return aNum - bNum;
+        });
+
+        // Rebuild dropdown
+        groupSelect.innerHTML = '<option value="">Tous les groupes</option>';
+        groups.forEach(g => {
+            groupSelect.innerHTML += `<option value="${g}">${g}</option>`;
+        });
+
+        groupSelect.value = currentGroup;
+        console.log('✓ Groupes mises à jour:', groups);
+    }
+
+        // Long press functionality
+        let longPressTimer = null;
+        let longPressActive = false;
+
+        function startLongPress(year, matricule, session, event) {
+            event.preventDefault();
+            
+            // Visual feedback
+            const cell = event.currentTarget;
+            const originalBg = cell.style.backgroundColor;
+            cell.style.backgroundColor = 'var(--color-primary)';
+            cell.style.color = 'white';
+            
+            longPressTimer = setTimeout(() => {
+                longPressActive = true;
+                
+                // Toggle checkbox
+                const checkbox = document.getElementById(`checkbox-${matricule}`);
+                if (checkbox) {
+                    checkbox.checked = !checkbox.checked;
+                    toggleAbsence(year, matricule, session, checkbox.checked);
+                    updateCheckboxLabel(checkbox);
+                }
+                
+                // Reset visual feedback
+                cell.style.backgroundColor = originalBg;
+                cell.style.color = '';
+                
+                // Vibration feedback (if supported)
+                if (navigator.vibrate) {
+                    navigator.vibrate(50);
+                }
+            }, 3000); // 3 seconds
+        }
+
+        function cancelLongPress() {
+            if (longPressTimer) {
+                clearTimeout(longPressTimer);
+                longPressTimer = null;
+            }
+            
+            // Reset all cell styles
+            document.querySelectorAll('.long-press-cell').forEach(cell => {
+                cell.style.backgroundColor = '';
+                cell.style.color = '';
+            });
+            
+            longPressActive = false;
+        }
+
+        // Note: Initialization handled by window.load event listener above
+    
+
+    // Sauvegarder observation
+    function saveObservation(matricule, value) {
+        localStorage.setItem('obs_' + matricule, value);
+        console.log('✅ Observation sauvegardée:', matricule);
+    }
+
     </script>
 </body>
 </html>
